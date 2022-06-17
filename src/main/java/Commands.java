@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -218,6 +219,7 @@ public class Commands extends ListenerAdapter {
                     channel.sendMessageEmbeds(eb.build()).queue();
                 }
 
+                //checks if there is a given reason
             }else if (args.length == 2){
                 eb.setTitle("Error");
                 eb.setDescription("Please enter a reason for the blacklist");
@@ -264,8 +266,29 @@ public class Commands extends ListenerAdapter {
             eb.addField("-removeblacklist [discord ID]", "Removes the blacklist from a discord user", false);
             eb.addField("-active", "Sets you as available for mod calls", false);
             eb.addField("-inactive", "Sets you as unavailable for mod calls", false);
+
+            channel.sendMessageEmbeds(eb.build()).queue();
+            return;
+        }
+
+        //server admin commands
+        if(args[0].equalsIgnoreCase(prefix + "admincommands") || args[0].equalsIgnoreCase(prefix + "acommands")){
+            EmbedBuilder eb = new EmbedBuilder();
+
+            eb.setColor(new Color(102, 214, 238));
+            eb.setAuthor("Admin Commands");
             eb.addField("-buildmodcall", "Builds the message in the mod call channel.\nRequires permission to use.", false);
             eb.addField("-clearmodcall", "Clears all users from mod call.\nRequires permission to use.", false);
+            eb.addField("-debug", "Stops all interactions.\nRequires permission to use.", false);
+            eb.addField("-buildReportM", "Creates the message directing users to Allie's DMs for reports.\nRequires permission to use.", false);
+            eb.addField("-buildAppealM", "Creates the message directing users to Allie's DMs for appeals.\nRequires permission to use.", false);
+            eb.addField("-gameTicketC", "Sets the game ticket channel.\nRequires permission to use.", false);
+            eb.addField("-ticketArchiveC", "Sets the archive channel.\nRequires permission to use.", false);
+            eb.addField("-server", "Sets the server.\nRequires permission to use.", false);
+            eb.addField("-modCallC", "Sets the mod call channel.\nRequires permission to use.", false);
+            eb.addField("-discordTicketC", "Sets the discord ticket channel.\nRequires permission to use.", false);
+
+
 
             channel.sendMessageEmbeds(eb.build()).queue();
             return;
@@ -285,7 +308,8 @@ public class Commands extends ListenerAdapter {
             return;
         }
 
-        if(args[0].equalsIgnoreCase(prefix + "debug") && (author.getId().equals(ownerID))){
+        //puts the bot in debug mode which ignores all messages/commands except those from the owner
+        if(args[0].equalsIgnoreCase(prefix + "debug") && (author.getId().equals(ownerID) || Objects.requireNonNull(event.getGuild().getMember(author)).hasPermission(Permission.ADMINISTRATOR))){
             if(Bot.botDebug){
                 Bot.botDebug = false;
                 channel.sendMessage("Bot is no longer in debug mode").queue();
@@ -293,6 +317,31 @@ public class Commands extends ListenerAdapter {
                 Bot.botDebug = true;
                 channel.sendMessage("Bot is in debug mode").queue();
             }
+        }
+
+        //creates the message directing users to DM Allie for reports
+        if(args[0].equalsIgnoreCase(prefix + "buildReportM") && (author.getId().equals(ownerID) || Objects.requireNonNull(event.getGuild().getMember(author)).hasPermission(Permission.ADMINISTRATOR))){
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setColor(new Color(102, 214, 238));
+            eb.setAuthor("In-Game Player Reports");
+            eb.setDescription("To report a player DM me \"-gamereport\"");
+            eb.setFooter(">>In order to make a report you need to allow direct messages<<");
+
+            channel.sendMessageEmbeds(eb.build()).queue();
+            message.delete().queue();
+        }
+
+        //creates the message directing users to DM Allie for appeals
+        if(args[0].equalsIgnoreCase(prefix + "buildAppealM") && (author.getId().equals(ownerID) || Objects.requireNonNull(event.getGuild().getMember(author)).hasPermission(Permission.ADMINISTRATOR))){
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setColor(new Color(102, 214, 238));
+            eb.setAuthor("In-Game unban appeals");
+            eb.setDescription("To make an appeal DM me \"-appeal\"");
+            eb.setFooter(">>In order to make an appeal you need to allow direct messages<<");
+
+            channel.sendMessageEmbeds(eb.build()).queue();
+            message.delete().queue();
+
         }
 
         //changes the game ticket channel
@@ -739,8 +788,8 @@ public class Commands extends ListenerAdapter {
                                     e2 -> {
                                         if(e2.getMessage().getContentRaw().equalsIgnoreCase("yes")) {
                                             event.getChannel().sendMessage("Message has been sent").queue(Message3 -> Message3.delete().queueAfter(5, TimeUnit.SECONDS));
-                                            event.getMessage().delete().queue();
-                                            AppealTicket.archive(args[1], event.getUser().getId(), 0, event.getJDA());
+                                            //event.getMessage().delete().queue();
+                                            AppealTicket.archive(args[1], event.getUser().getId(), 1, event.getJDA());
 
                                             //sends the message to the reporter
                                             event.getJDA().openPrivateChannelById(discordUser).flatMap(channel -> channel.sendMessageEmbeds(eb.build()))
