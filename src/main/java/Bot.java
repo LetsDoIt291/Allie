@@ -24,7 +24,7 @@ public class Bot {
         client.useHelpBuilder(false);
         client.setActivity(Activity.listening("-help"));
 
-        JDABuilder jda = JDABuilder.createDefault("NzkzOTU0MjQ4MzAzNzA2MTIy.GODJmm.pXeaNxlZ2cIcgdl6_IUlbAJzex1jULx5lgQ5T0")
+        JDABuilder jda = JDABuilder.createDefault("")
                 .setChunkingFilter(ChunkingFilter.ALL)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.GUILD_MEMBERS)
