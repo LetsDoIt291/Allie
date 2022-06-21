@@ -68,6 +68,8 @@ public class Commands extends ListenerAdapter {
                         + "\n\n> Videos must be uploaded to sites like https://www.youtube.com/ or any other video streaming platform (please avoid using streamable as the videos do expire)."
                         + "\n\n> Images must be uploaded to https://imgur.com/"
                         + "\n\n> The video/image must show:\n> 1. Exploits (the Kill feed or in-game stats are not valid)\n> 2. A username that is readable (a display name is not a username).\n ",false);
+                eb.addField("Toxicity Reports", "> Must be a video or screenshot that displays both chat and the scoreboard. (This is to avoid impersonation because of display names)"
+                        + "\n\n> We do not punish for general toxicity like \"gg ez,\" \"you're trash,\" etc.",false);
 
                 channel.sendMessageEmbeds(eb.build()).queue();
                 return;
@@ -193,7 +195,12 @@ public class Commands extends ListenerAdapter {
             return;
         }
 
-        //blacklists the user
+        //whitelists the user for the ticket system (no limit on reports)
+        if(args[0].equalsIgnoreCase(prefix + "whitelist")){
+
+
+
+        //blacklists the user for the ticket system (restricted from making any tickets)
         if(args[0].equalsIgnoreCase(prefix + "blacklist")){
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(new Color(102, 214, 238));
@@ -377,6 +384,13 @@ public class Commands extends ListenerAdapter {
         //returns if not from guild
         if(!event.isFromGuild()){
             return;
+        }
+
+        //if bot is in debug mode, return unless it's me
+        if(Bot.botDebug){
+            if(!event.getUser().getId().equals("395011406426144778")){
+                return;
+            }
         }
 
         //checks if the user has ban permission (I.E. is a mod or higher) and returns if they don't

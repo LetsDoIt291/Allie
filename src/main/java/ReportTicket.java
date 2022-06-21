@@ -52,6 +52,7 @@ public class ReportTicket {
         //searches for all the reports from a specific person
         for(int i = 0; i < reports.size(); i++){
             if(reports.get(i).suspect.equalsIgnoreCase(suspect)){
+                System.out.println("TRUE. Found a report. ID " + i);
                 selectedReports.add(reports.get(i));
                 reportIDs.add(String.valueOf(i));
             }
@@ -60,7 +61,7 @@ public class ReportTicket {
         if(!selectedReports.isEmpty()){
             for(int i = 0; i < selectedReports.size(); i++){
                 EmbedBuilder eb = new EmbedBuilder();
-                eb.addField("Game Report ID: " + i,"Reporter: " + reports.get(i).userID + "\nReason: " + reports.get(i).reason + "\nEvidence: " + reports.get(i).evidence, false);
+                eb.addField("Game Report ID: " + reportIDs.get(i),"Reporter: " + selectedReports.get(i).userID + "\nReason: " + selectedReports.get(i).reason + "\nEvidence: " + selectedReports.get(i).evidence, false);
 
                 eb.setColor(new Color(102, 214, 238));
                 eb.setAuthor("Game Reports for user " + suspect);

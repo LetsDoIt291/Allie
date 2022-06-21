@@ -111,7 +111,7 @@ public class GameReportCommand extends Command {
                                                                 // response
                                                                 e3 -> {
                                                                     evidence = e3.getMessage().getContentRaw().replace("\n", " ");
-                                                                    event.replyInDm("Thank you for reporting");
+                                                                    event.replyInDm(reportDone().build());
                                                                     Storage.removeUserFromOpenTicket(event.getAuthor().getId());
                                                                     ReportTicket.writeToFile(event.getAuthor().getId(), suspect, evidence, String.valueOf(System.currentTimeMillis()), reason);
                                                                     ReportTicket.reportFormat(new ReportTicket(event.getAuthor().getId(), suspect, evidence, String.valueOf(System.currentTimeMillis()), reason), event.getJDA());
@@ -177,6 +177,16 @@ public class GameReportCommand extends Command {
         return eb;
     }
 
+    public EmbedBuilder reportDone(){
+        EmbedBuilder eb = new EmbedBuilder();
+
+        eb.setColor(new Color(102, 214, 238));
+        eb.setTitle("Thank you for reporting!");
+        eb.setDescription("> You will receive a message when staff have reviewed your ticket.");
+
+        return eb;
+    }
+
     public EmbedBuilder gameReportInfo(){
         EmbedBuilder eb = new EmbedBuilder();
         eb.setColor(new Color(102, 214, 238));
@@ -185,6 +195,8 @@ public class GameReportCommand extends Command {
                 + "\n\n> Videos must be uploaded to sites like https://www.youtube.com/ or any other video streaming platform (please avoid using streamable as the videos do expire)."
                 + "\n\n> Images must be uploaded to https://imgur.com/"
                 + "\n\n> The video/image must show:\n> 1. Exploits (the Kill feed or in-game stats are not valid)\n> 2. A username that is readable (a display name is not a username).\n ",false);
+        eb.addField("Toxicity Reports", "> Must be a video or screenshot that displays both chat and the scoreboard. (This is to avoid impersonation because of display names)"
+                + "\n\n> We do not punish for general toxicity like \"gg ez,\" \"you're trash,\" etc.",false);
 
         return eb;
     }

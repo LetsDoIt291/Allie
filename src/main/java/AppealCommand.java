@@ -194,6 +194,7 @@ public class AppealCommand extends Command {
 
         eb.setColor(new Color(102, 214, 238));
         eb.setTitle("Your appeal has been submitted");
+        eb.setDescription("> You will receive a message when staff have reviewed your ticket.");
 
         return eb;
     }
