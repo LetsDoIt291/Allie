@@ -195,11 +195,6 @@ public class Commands extends ListenerAdapter {
             return;
         }
 
-        //whitelists the user for the ticket system (no limit on reports)
-        if(args[0].equalsIgnoreCase(prefix + "whitelist")){
-
-
-
         //blacklists the user for the ticket system (restricted from making any tickets)
         if(args[0].equalsIgnoreCase(prefix + "blacklist")){
             EmbedBuilder eb = new EmbedBuilder();
